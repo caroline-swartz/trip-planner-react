@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  get '/login', to: 'login#index'
   get 'users/index'
   post 'users/create'
   get '/dashboard/:id', to: 'users#show'
