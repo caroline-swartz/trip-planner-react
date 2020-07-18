@@ -51,6 +51,13 @@
     opacity: 0.4;
   }
 
-  .custom-form1 {
+  .border-padding {
     padding: 3%;
+  }
+
+  .home-background {
+    background-image: url("https://www.clipartkey.com/mpngs/m/102-1021733_clip-art-blank-world-map-world-map-outline.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
   }

@@ -13,7 +13,7 @@ class Login extends React.Component {
                     <div className="container secondary-color">
                         <h1 className="display-4">Login</h1>
                         <hr className="my-4"/>
-                        <form className="border border-secondary rounded custom-form1">
+                        <form className="border border-secondary rounded border-padding">
                             <div className="form-group">
                                 <label for="emailInput">Email address</label>
                                 <input type="email" class="form-control" id="emailInput" aria-describedby="emailHelp" placeholder="Enter email"/>
