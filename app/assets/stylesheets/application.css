@@ -40,7 +40,15 @@
     border: none;
     width: 20%
   }
+  .custom-button3.btn {
+    background-color: #293241;
+    color: #FFF;
+    border: none;
+    width: 60%;
+    margin-left: 20%;
+    margin-right: 20%;
 
+  }
   .custom-button.btn:hover {
     color: #FFF !important;
     border: none;
