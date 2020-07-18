@@ -60,39 +60,47 @@ class Home extends React.Component {
     }
 
     showLogin = () => {
+        document.getElementById("topLine").style.visibility = "hidden";
         return(
             <div>
-                <form className="w-50">
-                    <div className="form-group">
-                        <input type="text" name="email" id="userEmail" className="form-control" required placeholder="Email"/>
-                    </div>
+                <hr className="my-4"/>
+                <div className="offset-lg-4">
+                    <form className="w-50">
                         <div className="form-group">
-                            <input type="text" name="password" id="userPassword" className="form-control" required placeholder="Password"/>
-                    </div>
-                    <button type="submit" className="btn custom-button3">Log In</button>
-                </form>
+                            <input type="text" name="email" id="userEmail" className="form-control" required placeholder="Email"/>
+                        </div>
+                            <div className="form-group">
+                                <input type="text" name="password" id="userPassword" className="form-control" required placeholder="Password"/>
+                        </div>
+                        <button type="submit" className="btn custom-button3">Log In</button>
+                    </form>
+                </div>
             </div>
         );
     }
 
     showSignUp = () => {
+        document.getElementById("topLine").style.visibility = "hidden";
         return(
             <div>
-                <form className="w-50" onSubmit={this.onSignupSubmit}>
-                    <div className="form-group">
-                        <input type="text" name="firstname" id="userFirstName" className="form-control" required placeholder="First Name" onChange={this.onChange}/>
-                    </div>
-                    <div className="form-group">
-                        <input type="text" name="lastname" id="userLastName" className="form-control" required placeholder="Last Name" onChange={this.onChange}/>
-                    </div>
-                    <div className="form-group">
-                        <input type="text" name="email" id="userEmail" className="form-control" required placeholder="Email" onChange={this.onChange}/>
-                    </div>
-                    <div className="form-group">
-                        <input type="text" name="password" id="userPassword" className="form-control" required placeholder="Password" onChange={this.onChange}/>
-                    </div>
-                    <button type="submit" className="btn custom-button3">Sign Up</button>
-                </form>
+                <hr className="my-4"/>
+                <div className="offset-lg-4">
+                    <form className="w-50" onSubmit={this.onSignupSubmit}>
+                        <div className="form-group">
+                            <input type="text" name="firstname" id="userFirstName" className="form-control" required placeholder="First Name" onChange={this.onChange}/>
+                        </div>
+                        <div className="form-group">
+                            <input type="text" name="lastname" id="userLastName" className="form-control" required placeholder="Last Name" onChange={this.onChange}/>
+                        </div>
+                        <div className="form-group">
+                            <input type="text" name="email" id="userEmail" className="form-control" required placeholder="Email" onChange={this.onChange}/>
+                        </div>
+                        <div className="form-group">
+                            <input type="text" name="password" id="userPassword" className="form-control" required placeholder="Password" onChange={this.onChange}/>
+                        </div>
+                        <button type="submit" className="btn custom-button3">Sign Up</button>
+                    </form>
+                </div>
             </div>
         )
     }
@@ -103,7 +111,7 @@ class Home extends React.Component {
                 <div className="jumbotron jumbotron-fluid bg-transparent">
                     <div className="container primary-color border border-secondary rounded border-padding">
                         <h1 className="display-4">Welcome to Trip Planner</h1>
-                        <hr className="my-4"/>
+                        <hr id="topLine" className="my-4"/>
                         <div className="d-flex align-items-center justify-content-center">
                             <button className="btn btn-lg custom-button1" onClick={() => this.setState({showLogin: true, showSignUp: false})}>
                                 Log In
