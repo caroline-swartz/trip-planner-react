@@ -71,10 +71,10 @@ class Home extends React.Component {
                 <hr className="my-4"/>
                 <form className="home-form">
                     <div className="form-group">
-                        <input type="text" name="email" id="userEmail" className="form-control" required placeholder="Email"/>
+                        <input type="email" name="email" id="userEmail" className="form-control" required placeholder="Email"/>
                     </div>
                     <div className="form-group">
-                        <input type="text" name="password" id="userPassword" className="form-control" required placeholder="Password"/>
+                        <input type="password" name="password" id="userPassword" className="form-control" required placeholder="Password"/>
                     </div>
                     <button type="submit" className="btn custom-button3">Log In</button>
                 </form>
@@ -96,10 +96,10 @@ class Home extends React.Component {
                         <input type="text" name="lastname" id="userLastName" className="form-control" required placeholder="Last Name" onChange={this.onChange}/>
                     </div>
                     <div className="form-group">
-                        <input type="text" name="email" id="userEmail" className="form-control" required placeholder="Email" onChange={this.onChange}/>
+                        <input type="email" name="email" id="userEmail" className="form-control" required placeholder="Email" onChange={this.onChange}/>
                     </div>
                     <div className="form-group">
-                        <input type="text" name="password_digest" id="userPasswordDigest" className="form-control" required placeholder="Password" onChange={this.onChange}/>
+                        <input type="password" name="password_digest" id="userPasswordDigest" className="form-control" required placeholder="Password" onChange={this.onChange}/>
                     </div>
                     <button type="submit" className="btn custom-button3">Sign Up</button>
                 </form>
