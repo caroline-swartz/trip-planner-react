@@ -1,4 +1,7 @@
 class UsersController < ApplicationController
+
+  has_secure_password
+
   #get all users in the database
   def index
     user = User.all.order(created_at: :desc)
@@ -13,6 +16,7 @@ class UsersController < ApplicationController
     else
       render json: user.errors
     end
+    session[:user_id] = user.id
   end
 
   #show a specific user's dashboard
@@ -33,7 +37,7 @@ class UsersController < ApplicationController
   private 
 
   def user_params
-    params.permit(:email, :firstname, :lastname, :password)
+    params.permit(:email, :firstname, :lastname, :password_digest)
   end
 
   def user

@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  get 'sessions/new'
+  get 'sessions/create'
+  get 'sessions/login'
+  get 'sessions/welcome'
   get 'users/index'
   post 'users/create'
   get '/dashboard/:id', to: 'users#show'

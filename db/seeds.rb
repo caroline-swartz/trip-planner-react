@@ -11,5 +11,5 @@ User.create(
     email: "cjluvsu@hotmail.com",
     firstname: "Caroline",
     lastname: "Swartz",
-    password: Digest::SHA2.hexdigest('caroline123')
+    password_digest: Digest::SHA2.hexdigest('caroline123')
 )
