@@ -9,7 +9,7 @@ class Home extends React.Component {
             firstname: "",
             lastname: "",
             email: "",
-            password: ""
+            password_digest: ""
         };
 
         this.onChange = this.onChange.bind(this);
@@ -28,7 +28,7 @@ class Home extends React.Component {
     onSignupSubmit(event) {
         event.preventDefault();
         const url = "/users/create";
-        const { email, firstname, lastname, password } = this.state;
+        const { email, firstname, lastname, password_digest } = this.state;
 
         if (email.length == 0 || firstname.length == 0 || lastname.length == 0 || password.length == 0)
             return;
@@ -37,7 +37,7 @@ class Home extends React.Component {
             email,
             firstname,
             lastname,
-            password
+            password_digest
         };
 
         const token = document.querySelector('meta[name="csrf-token"]').content;
