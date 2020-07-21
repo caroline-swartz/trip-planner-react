@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
 
+    #prevents Rails from using its authenticity token so we don’t receive ‘forbidden’ parameters
     skip_before_action :verify_authenticity_token
 
     helper_method :login!, :logged_in?, :current_user, :authorized_user?, :logout!
