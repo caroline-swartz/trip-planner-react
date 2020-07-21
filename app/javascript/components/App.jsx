@@ -13,12 +13,9 @@ class App extends React.Component {
         };
     }
 
+    //Always check the login status upon mounting
     componentDidMount() {
         this.loginStatus();
-    }
-
-    componentWillMount() {
-        return this.props.loggedInStatus ? this.redirect() : null
     }
 
     /**This is the backbone of our front-end authorization system. The 'GET request
@@ -44,14 +41,14 @@ class App extends React.Component {
 
     handleLogin = (data) => {
         this.setState({
-            isLoggedIn: true,
+            isLoggedIn: true, //set logged in status to true
             user: data.user //data is the response data we receive from the server
         })
     }
 
     handleLogout = () => {
         this.setState({
-            isLoggedIn: false,
+            isLoggedIn: false, //set logged in status to false
             user: {}
         })
     }
