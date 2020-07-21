@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   get '/logged_in', to: 'sessions#is_logged_in?'
   get 'users/index'
   post '/users/create'
+  get '/users/show'
   get '/dashboard/:id', to: 'users#show'
   root 'homepage#index'
   get '/*path' => 'homepage#index'

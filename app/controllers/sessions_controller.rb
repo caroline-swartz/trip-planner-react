@@ -1,4 +1,4 @@
-class SessionController < ApplicationController
+class SessionsController < ApplicationController
 
     #create a new session for the user logging in
     def create
@@ -46,3 +46,6 @@ class SessionController < ApplicationController
 
     def session_params
         params.require(:user).permit(:email, :firstname, :lastname, :password)
+    end
+
+end

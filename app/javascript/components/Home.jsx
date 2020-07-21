@@ -1,5 +1,7 @@
 import React from 'react';
 import axios from 'axios';
+import { withRouter } from 'react-router-dom';
+import {Link} from 'react-router-dom'
 
 class Home extends React.Component {
     constructor(props) {
@@ -11,12 +13,15 @@ class Home extends React.Component {
             lastname: "",
             email: "",
             password: "",
-            password_confirmation: ""
+            password_confirmation: "",
+            errors: ""
         };
     
         this.onChange = this.onChange.bind(this);
         this.onSignupSubmit = this.onSignupSubmit.bind(this);
+        this.onLoginSubmit = this.onLoginSubmit.bind(this);
         this.stripHtmlEntities = this.stripHtmlEntities.bind(this);
+        this.handleLogoutClick = this.handleLogoutClick.bind(this);
     }
 
     componentWillMount() {
@@ -30,13 +35,22 @@ class Home extends React.Component {
     onChange(event) {
         this.setState({ [event.target.name]: event.target.value });
     }
+
+    handleLogoutClick() {
+        axios.delete('http://localhost:3001/logout', {withCredentials: true})
+        .then(response => {
+            this.props.handleLogout()
+            this.props.history.push('/')
+        })
+        .catch(error => console.log(error))
+    }
     
     //TODO add login form submission event handler
 
     //handles submission event from sign up form
     onLoginSubmit(event) {
         event.preventDefault();
-        const { login, signup, email, firstname, lastname, password, password_confirmation } = this.state;
+        const { email, firstname, lastname, password, password_confirmation} = this.state;
     
         let user = {
             email: email,
@@ -47,7 +61,34 @@ class Home extends React.Component {
         .then(response => {
             if(response.data.logged_in) {
                 this.props.handleLogin(response.data);
-                this.props.history.push('/');
+                this.props.history.push('/dashboard/${user.id}');
+            } else {
+                this.setState({
+                    errors: response.data.errors
+                });
+                console.log(response);
+            }
+        })
+        .catch(error => console.log('api errors:', error));
+    }
+    
+    onSignupSubmit(event) {
+        event.preventDefault();
+        const { email, firstname, lastname, password, password_confirmation} = this.state;
+
+        let user = {
+            email: email,
+            firstname: firstname,
+            lastname: lastname,
+            password: password,
+            password_confirmation: password_confirmation
+        };
+
+        axios.post('http://localhost:3001/users/create', {user}, {withCredentials: true})
+        .then(response => {
+            if(response.data.status === 'created') {
+                this.props.handleLogin(response.data);
+                this.props.history.push('/users');
             } else {
                 this.setState({
                     errors: response.data.errors
@@ -56,54 +97,19 @@ class Home extends React.Component {
         })
         .catch(error => console.log('api errors:', error));
     }
-    
-    onSignupSubmit(event) {
-        event.preventDefault();
-        const url = "/users/create";
-        const { email, firstname, lastname, password } = this.state;
-
-        if (email.length == 0 || firstname.length == 0 || lastname.length == 0 || password.length == 0)
-            return;
-
-        const body = {
-            email,
-            firstname,
-            lastname,
-            password
-        };
-
-        const token = document.querySelector('meta[name="csrf-token"]').content;
-        fetch(url, {
-            method: "POST",
-            headers: {
-                "X-CSRF-Token": token,
-                "Content-Type": "application/json",
-                credentials: "include"
-            },
-            body: JSON.stringify(body)
-        })
-        .then(response => {
-            if (response.ok) {
-                return response.json();
-            }
-            throw new Error("Network response was not ok.");
-        })
-        .then(response => this.props.history.push('/users'))
-        .catch(error => console.log(error.message));
-    }
 
     //the login form to be displayed 
     showLogin = () => {
         document.getElementById("topLine").style.visibility = "hidden";
         return(
-            <div classname="home-form-div">
+            <div className="home-form-div">
                 <hr className="my-4"/>
-                <form className="home-form">
+                <form className="home-form" onSubmit={this.onLoginSubmit}>
                     <div className="form-group">
-                        <input type="email" name="email" id="userEmail" className="form-control" required placeholder="Email"/>
+                        <input type="email" name="email" id="userEmail" className="form-control" required placeholder="Email" onChange={this.onChange}/>
                     </div>
                     <div className="form-group">
-                        <input type="password" name="password" id="userPassword" className="form-control" required placeholder="Password"/>
+                        <input type="password" name="password" id="userPassword" className="form-control" required placeholder="Password" onChange={this.onChange}/>
                     </div>
                     <button type="submit" className="btn custom-button3">Log In</button>
                 </form>
@@ -115,7 +121,7 @@ class Home extends React.Component {
     showSignUp = () => {
         document.getElementById("topLine").style.visibility = "hidden";
         return(
-            <div classname="home-form-div">
+            <div className="home-form-div">
                 <hr className="my-4"/>
                 <form className="home-form" onSubmit={this.onSignupSubmit}>
                     <div className="form-group">
@@ -128,13 +134,28 @@ class Home extends React.Component {
                         <input type="email" name="email" id="userEmail" className="form-control" required placeholder="Email" onChange={this.onChange}/>
                     </div>
                     <div className="form-group">
-                        <input type="password" name="password_digest" id="userPasswordDigest" className="form-control" required placeholder="Password" onChange={this.onChange}/>
+                        <input type="password" name="password" id="userPassword" className="form-control" required placeholder="Password" onChange={this.onChange}/>
+                    </div>
+                    <div className="form-group">
+                        <input type="password" name="password_confirmation" id="userPasswordConfirmation" className="form-control" required placeholder="Confirm Password" onChange={this.onChange}/>
                     </div>
                     <button type="submit" className="btn custom-button3">Sign Up</button>
                 </form>
             </div>
         )
     }
+
+    handleErrors = () => {
+        return (
+          <div>
+            <ul>
+            {this.state.errors.map(error => {
+            return <li key={error}>{error}</li>
+              })}
+            </ul>
+          </div>
+        )
+      }
     
     render() {
         return (
@@ -153,10 +174,11 @@ class Home extends React.Component {
                         </div>
                         {this.state.showLogin ? this.showLogin() : null}
                         {this.state.showSignUp ? this.showSignUp() : null}
+                        {this.props.loggedInStatus ? <Link to='/logout' onClick={this.handleLogoutClick}>Log Out</Link> : null}
                     </div>
                 </div>
             </div>
         )
     }
 }
-export default Home;
+export default withRouter(Home);

@@ -28,7 +28,7 @@ class App extends React.Component {
     * with the user object. We use this response data to maintain the logged in
     * status in the front-end.
     **/
-   loginStatus() {
+   loginStatus = () => {
         axios.get('http://localhost:3001/logged_in', {withCredentials: true})
         .then(response => {
             if (response.data.logged_in) {
@@ -42,14 +42,14 @@ class App extends React.Component {
 
     //control the login status of the application and user data
 
-    handleLogin(data) {
+    handleLogin = (data) => {
         this.setState({
             isLoggedIn: true,
             user: data.user //data is the response data we receive from the server
         })
     }
 
-    handleLogout() {
+    handleLogout = () => {
         this.setState({
             isLoggedIn: false,
             user: {}
@@ -68,7 +68,7 @@ class App extends React.Component {
                         <Route 
                             exact path='/' 
                             render={props => (
-                                <Home {...props} handleLogin={this.handleLogin} loggedInStatus={this.state.isLoggedIn}/>
+                                <Home {...props} handleLogin={this.handleLogin} handleLogout={this.handleLogout} loggedInStatus={this.state.isLoggedIn}/>
                             )}
                         />
                         <Route path="/users" exact component={Users} />

@@ -6,9 +6,25 @@ class UsersController < ApplicationController
     render json: user
   end
 
+  #show a specific user's dashboard
+  def show
+    @user = User.find(params[:id])
+    if @user
+      render json: {
+        user: @user
+      }
+    else
+      render json: {
+        status: 500,
+        errors: ['user not found']
+      }
+    end
+  end
+
+
   #add a new user to db
   def create
-    @user = User.create!(user_params)
+    @user = User.new(user_params)
     if @user.save
       login!
       render json: {
@@ -16,16 +32,10 @@ class UsersController < ApplicationController
         user: @user
       }
     else
-      render json: @user.errors
-    end
-  end
-
-  #show a specific user's dashboard
-  def show
-    if user
-      render json: user
-    else
-      render json: user.errors
+      render json: {
+        status: 500,
+        errors: @user.errors.full_messages
+      }
     end
   end
 
@@ -38,10 +48,7 @@ class UsersController < ApplicationController
   private 
 
   def user_params
-    params.permit(:email, :firstname, :lastname, :password, :password_confirmation)
+    params.require(:user).permit(:email, :firstname, :lastname, :password, :password_confirmation)
   end
 
-  def user
-    @user ||= User.find(params[:id])
-  end
 end
