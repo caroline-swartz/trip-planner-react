@@ -17,6 +17,7 @@ class Home extends React.Component {
             errors: ""
         };
     
+        //binds these functions to be able to use the correct "this" within functions
         this.onChange = this.onChange.bind(this);
         this.onSignupSubmit = this.onSignupSubmit.bind(this);
         this.onLoginSubmit = this.onLoginSubmit.bind(this);
@@ -24,18 +25,23 @@ class Home extends React.Component {
         this.handleLogoutClick = this.handleLogoutClick.bind(this);
     }
 
+    //makes it so if you are already logged in, you cannot access '/login' page
     componentWillMount() {
         return this.props.loggedInStatus ? this.redirect() : null
     }
     
+    //something about changing characters into url escaped character codes
     stripHtmlEntities(str) {
         return String(str).replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
+
     //updates state variables when user types in a field
     onChange(event) {
         this.setState({ [event.target.name]: event.target.value });
     }
 
+    //sends a delete request and calls our App.jsx's handleLogout function for the session 
+    //to be deleted then redirects back to home page
     handleLogoutClick() {
         axios.delete('http://localhost:3001/logout', {withCredentials: true})
         .then(response => {
@@ -44,10 +50,8 @@ class Home extends React.Component {
         })
         .catch(error => console.log(error))
     }
-    
-    //TODO add login form submission event handler
 
-    //handles submission event from sign up form
+    //handles submission event from login form
     onLoginSubmit(event) {
         event.preventDefault();
         const { email, firstname, lastname, password, password_confirmation} = this.state;
@@ -57,8 +61,11 @@ class Home extends React.Component {
             password: password
         }
     
+        //sends a post request to the 'login' route which redirects to the 
+        //sessions controller's create function
         axios.post('http://localhost:3001/login', {user}, {withCredentials: true})
         .then(response => {
+            //if login was successful, call App.jsx's handleLogin function and redirect to the user's dashboard
             if(response.data.logged_in) {
                 this.props.handleLogin(response.data);
                 this.props.history.push('/dashboard/${user.id}');
@@ -72,6 +79,7 @@ class Home extends React.Component {
         .catch(error => console.log('api errors:', error));
     }
     
+    //handles submission event from signup form
     onSignupSubmit(event) {
         event.preventDefault();
         const { email, firstname, lastname, password, password_confirmation} = this.state;
@@ -84,8 +92,11 @@ class Home extends React.Component {
             password_confirmation: password_confirmation
         };
 
+        //sends a post request to the 'users/create' route which calls the
+        //users controller's create function
         axios.post('http://localhost:3001/users/create', {user}, {withCredentials: true})
         .then(response => {
+            //if a user was successfully created, call App.jsx's handleLogin function
             if(response.data.status === 'created') {
                 this.props.handleLogin(response.data);
                 this.props.history.push('/users');
@@ -145,6 +156,7 @@ class Home extends React.Component {
         )
     }
 
+    //a helper function to handle and display any errors
     handleErrors = () => {
         return (
           <div>
@@ -181,4 +193,5 @@ class Home extends React.Component {
         )
     }
 }
+
 export default withRouter(Home);
