@@ -67,3 +67,13 @@
     background-repeat: no-repeat;
     background-size: cover;
   }
+
+  .home-form-div {
+    height: auto;
+    margin:0 auto;
+  }
+
+  .home-form {
+    width: 30%;
+    margin:0 auto;
+  }
