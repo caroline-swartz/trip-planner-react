@@ -21,12 +21,12 @@ class UsersController < ApplicationController
     end
   end
 
-
   #add a new user to db
   def create
     @user = User.new(user_params)
     if @user.save
       login!
+      #send this data back Home.jsx's post request
       render json: {
         status: :created,
         user: @user
