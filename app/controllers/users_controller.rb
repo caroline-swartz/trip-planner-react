@@ -8,13 +8,16 @@ class UsersController < ApplicationController
 
   #add a new user to db
   def create
-    user = User.create!(user_params)
-    if user
-      render json: user
+    @user = User.create!(user_params)
+    if @user.save
+      login!
+      render json: {
+        status: :created,
+        user: @user
+      }
     else
-      render json: user.errors
+      render json: @user.errors
     end
-    session[:user_id] = user.id
   end
 
   #show a specific user's dashboard
@@ -35,7 +38,7 @@ class UsersController < ApplicationController
   private 
 
   def user_params
-    params.permit(:email, :firstname, :lastname, :password_digest)
+    params.permit(:email, :firstname, :lastname, :password, :password_confirmation)
   end
 
   def user

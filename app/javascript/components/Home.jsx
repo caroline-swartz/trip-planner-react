@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 
 class Home extends React.Component {
     constructor(props) {
@@ -9,39 +10,66 @@ class Home extends React.Component {
             firstname: "",
             lastname: "",
             email: "",
-            password_digest: ""
+            password: "",
+            password_confirmation: ""
         };
-
+    
         this.onChange = this.onChange.bind(this);
         this.onSignupSubmit = this.onSignupSubmit.bind(this);
         this.stripHtmlEntities = this.stripHtmlEntities.bind(this);
     }
 
+    componentWillMount() {
+        return this.props.loggedInStatus ? this.redirect() : null
+    }
+    
     stripHtmlEntities(str) {
         return String(str).replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
-
     //updates state variables when user types in a field
     onChange(event) {
         this.setState({ [event.target.name]: event.target.value });
     }
-
+    
     //TODO add login form submission event handler
 
     //handles submission event from sign up form
+    onLoginSubmit(event) {
+        event.preventDefault();
+        const { login, signup, email, firstname, lastname, password, password_confirmation } = this.state;
+    
+        let user = {
+            email: email,
+            password: password
+        }
+    
+        axios.post('http://localhost:3001/login', {user}, {withCredentials: true})
+        .then(response => {
+            if(response.data.logged_in) {
+                this.props.handleLogin(response.data);
+                this.props.history.push('/');
+            } else {
+                this.setState({
+                    errors: response.data.errors
+                });
+            }
+        })
+        .catch(error => console.log('api errors:', error));
+    }
+    
     onSignupSubmit(event) {
         event.preventDefault();
         const url = "/users/create";
-        const { email, firstname, lastname, password_digest } = this.state;
+        const { email, firstname, lastname, password } = this.state;
 
-        if (email.length == 0 || firstname.length == 0 || lastname.length == 0 || password_digest.length == 0)
+        if (email.length == 0 || firstname.length == 0 || lastname.length == 0 || password.length == 0)
             return;
 
         const body = {
             email,
             firstname,
             lastname,
-            password_digest
+            password
         };
 
         const token = document.querySelector('meta[name="csrf-token"]').content;
@@ -49,7 +77,8 @@ class Home extends React.Component {
             method: "POST",
             headers: {
                 "X-CSRF-Token": token,
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                credentials: "include"
             },
             body: JSON.stringify(body)
         })
@@ -106,7 +135,7 @@ class Home extends React.Component {
             </div>
         )
     }
-
+    
     render() {
         return (
             <div className="vw-100 vh-100 primary-color d-flex align-items-center justify-content-center home-background">

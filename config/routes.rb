@@ -1,8 +1,10 @@
 Rails.application.routes.draw do
+  post '/login', to: 'sessions#create'
+  delete 'logout', to: 'sessions#destroy'
+  get '/logged_in', to: 'sessions#is_logged_in?'
   get 'users/index'
-  post 'users/create'
+  post '/users/create'
   get '/dashboard/:id', to: 'users#show'
-  delete '/delete-account/:id', to: 'users#destroy'
   root 'homepage#index'
   get '/*path' => 'homepage#index'
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
