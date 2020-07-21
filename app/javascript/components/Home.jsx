@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 
 class Home extends React.Component {
     constructor(props) {
@@ -9,35 +10,63 @@ class Home extends React.Component {
             firstname: "",
             lastname: "",
             email: "",
-            password_digest: ""
+            password: "",
+            password_confirmation: ""
         };
-
+    
         this.onChange = this.onChange.bind(this);
         this.onSignupSubmit = this.onSignupSubmit.bind(this);
         this.stripHtmlEntities = this.stripHtmlEntities.bind(this);
     }
 
+    componentWillMount() {
+        return this.props.loggedInStatus ? this.redirect() : null
+    }
+    
     stripHtmlEntities(str) {
         return String(str).replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
-
+    
     onChange(event) {
         this.setState({ [event.target.name]: event.target.value });
     }
-
+    
+    onLoginSubmit(event) {
+        event.preventDefault();
+        const { login, signup, email, firstname, lastname, password, password_confirmation } = this.state;
+    
+        let user = {
+            email: email,
+            password: password
+        }
+    
+        axios.post('http://localhost:3001/login', {user}, {withCredentials: true})
+        .then(response => {
+            if(response.data.logged_in) {
+                this.props.handleLogin(response.data);
+                this.props.history.push('/');
+            } else {
+                this.setState({
+                    errors: response.data.errors
+                });
+            }
+        })
+        .catch(error => console.log('api errors:', error));
+    }
+    
     onSignupSubmit(event) {
         event.preventDefault();
         const url = "/users/create";
-        const { email, firstname, lastname, password_digest } = this.state;
+        const { email, firstname, lastname, password } = this.state;
 
-        if (email.length == 0 || firstname.length == 0 || lastname.length == 0 || password_digest.length == 0)
+        if (email.length == 0 || firstname.length == 0 || lastname.length == 0 || password.length == 0)
             return;
 
         const body = {
             email,
             firstname,
             lastname,
-            password_digest
+            password
         };
 
         const token = document.querySelector('meta[name="csrf-token"]').content;
@@ -45,7 +74,8 @@ class Home extends React.Component {
             method: "POST",
             headers: {
                 "X-CSRF-Token": token,
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                credentials: "include"
             },
             body: JSON.stringify(body)
         })
@@ -58,7 +88,7 @@ class Home extends React.Component {
         .then(response => this.props.history.push('/users'))
         .catch(error => console.log(error.message));
     }
-
+    
     showLogin = () => {
         document.getElementById("topLine").style.visibility = "hidden";
         return(
@@ -78,7 +108,7 @@ class Home extends React.Component {
             </div>
         );
     }
-
+    
     showSignUp = () => {
         document.getElementById("topLine").style.visibility = "hidden";
         return(
@@ -96,7 +126,10 @@ class Home extends React.Component {
                             <input type="text" name="email" id="userEmail" className="form-control" required placeholder="Email" onChange={this.onChange}/>
                         </div>
                         <div className="form-group">
-                            <input type="text" name="password_digest" id="userPasswordDigest" className="form-control" required placeholder="Password" onChange={this.onChange}/>
+                            <input type="text" name="password" id="userPassword" className="form-control" required placeholder="Password" onChange={this.onChange}/>
+                        </div>
+                        <div className="form-group">
+                            <input type="text" name="password_confirmation" id="userPasswordConfirmation" className="form-control" required placeholder="Confirm Password" onChange={this.onChange}/>
                         </div>
                         <button type="submit" className="btn custom-button3">Sign Up</button>
                     </form>
@@ -104,7 +137,7 @@ class Home extends React.Component {
             </div>
         )
     }
-
+    
     render() {
         return (
             <div className="vw-100 vh-100 primary-color d-flex align-items-center justify-content-center home-background">
