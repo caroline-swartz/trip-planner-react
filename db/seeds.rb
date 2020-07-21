@@ -5,3 +5,11 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+require 'digest'
+
+User.create(
+    email: "cjluvsu@hotmail.com",
+    firstname: "Caroline",
+    lastname: "Swartz",
+    password: Digest::SHA2.hexdigest('caroline123')
+)
