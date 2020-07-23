@@ -65,7 +65,7 @@ class App extends React.Component {
                         <Route 
                             exact path='/' 
                             render={props => (
-                                <Home {...props} handleLogin={this.handleLogin} handleLogout={this.handleLogout} loggedInStatus={this.state.isLoggedIn}/>
+                                <Home {...props} handleLogin={this.handleLogin} handleLogout={this.handleLogout} loggedInStatus={this.state.isLoggedIn} currentUser={this.state.user}/>
                             )}
                         />
                         <Route path="/users" exact component={Users} />

@@ -14,7 +14,8 @@ class Home extends React.Component {
             email: "",
             password: "",
             password_confirmation: "",
-            errors: ""
+            errors: "",
+            badLogin: false
         };
     
         //binds these functions to be able to use the correct "this" within functions
@@ -23,11 +24,7 @@ class Home extends React.Component {
         this.onLoginSubmit = this.onLoginSubmit.bind(this);
         this.stripHtmlEntities = this.stripHtmlEntities.bind(this);
         this.handleLogoutClick = this.handleLogoutClick.bind(this);
-    }
-
-    //makes it so if you are already logged in, you cannot access '/login' page
-    componentWillMount() {
-        return this.props.loggedInStatus ? this.redirect() : null
+        this.goToUserDashboard = this.goToUserDashboard.bind(this);
     }
     
     //something about changing characters into url escaped character codes
@@ -38,6 +35,10 @@ class Home extends React.Component {
     //updates state variables when user types in a field
     onChange(event) {
         this.setState({ [event.target.name]: event.target.value });
+    }
+
+    goToUserDashboard(user) {
+        this.props.history.push('/dashboard/${user.id}');
     }
 
     //sends a delete request and calls our App.jsx's handleLogout function for the session 
@@ -67,13 +68,14 @@ class Home extends React.Component {
         .then(response => {
             //if login was successful, call App.jsx's handleLogin function and redirect to the user's dashboard
             if(response.data.logged_in) {
+                this.setState({badLogin: false})
                 this.props.handleLogin(response.data);
-                this.props.history.push('/dashboard/${user.id}');
+                this.goToUserDashboard(user);
             } else {
                 this.setState({
-                    errors: response.data.errors
+                    errors: response.data.errors,
+                    badLogin: true
                 });
-                console.log(response);
             }
         })
         .catch(error => console.log('api errors:', error));
@@ -115,6 +117,7 @@ class Home extends React.Component {
         return(
             <div className="home-form-div">
                 <hr className="my-4"/>
+                {this.state.badLogin ? <p className="text-danger">{this.state.errors}</p> : null }
                 <form className="home-form" onSubmit={this.onLoginSubmit}>
                     <div className="form-group">
                         <input type="email" name="email" id="userEmail" className="form-control" required placeholder="Email" onChange={this.onChange}/>
@@ -156,18 +159,11 @@ class Home extends React.Component {
         )
     }
 
-    //a helper function to handle and display any errors
-    handleErrors = () => {
-        return (
-          <div>
-            <ul>
-            {this.state.errors.map(error => {
-            return <li key={error}>{error}</li>
-              })}
-            </ul>
-          </div>
-        )
-      }
+    componentDidUpdate(prevRender) {
+        if(this.state.badLogin && this.state.showSignUp){
+            this.setState({badLogin: false});
+        }
+    }
     
     render() {
         return (
@@ -177,16 +173,15 @@ class Home extends React.Component {
                         <h1 className="display-4">Welcome to Trip Planner</h1>
                         <hr id="topLine" className="my-4"/>
                         <div className="d-flex align-items-center justify-content-center">
-                            <button className="btn btn-lg custom-button1" onClick={() => this.setState({showLogin: true, showSignUp: false})}>
-                                Log In
-                            </button>
-                            <button className="btn btn-lg custom-button2" onClick={() => this.setState({showLogin: false, showSignUp: true})}>
-                                Sign Up
-                            </button>
+                            {this.props.loggedInStatus ? 
+                            <button className="btn btn-lg custom-button1" onClick={() => this.goToUserDashboard(this.props.currentUser)}>Home</button> :
+                            <button className="btn btn-lg custom-button1" onClick={() => this.setState({showLogin: true, showSignUp: false})}>Log In</button>}
+                            {this.props.loggedInStatus ? 
+                            <button className="btn btn-lg custom-button2" onClick={() => this.handleLogoutClick()}>Log Out</button> :
+                            <button className="btn btn-lg custom-button2" onClick={() => this.setState({showLogin: false, showSignUp: true})}>Sign Up</button>}
                         </div>
                         {this.state.showLogin ? this.showLogin() : null}
                         {this.state.showSignUp ? this.showSignUp() : null}
-                        {this.props.loggedInStatus ? <Link to='/logout' onClick={this.handleLogoutClick}>Log Out</Link> : null}
                     </div>
                 </div>
             </div>
