@@ -15,7 +15,8 @@ class Home extends React.Component {
             password: "",
             password_confirmation: "",
             errors: "",
-            badLogin: false
+            badLogin: false,
+            badSignup: false
         };
     
         //binds these functions to be able to use the correct "this" within functions
@@ -100,11 +101,13 @@ class Home extends React.Component {
         .then(response => {
             //if a user was successfully created, call App.jsx's handleLogin function
             if(response.data.status === 'created') {
+                this.setState({badSignup: false})
                 this.props.handleLogin(response.data);
                 this.props.history.push('/users');
             } else {
                 this.setState({
-                    errors: response.data.errors
+                    errors: "An account with this email already exists.",
+                    badSignup: true
                 });
             }
         })
@@ -137,6 +140,7 @@ class Home extends React.Component {
         return(
             <div className="home-form-div">
                 <hr className="my-4"/>
+                {this.state.badSignup ? <p className="text-danger">{this.state.errors}</p> : null }
                 <form className="home-form" onSubmit={this.onSignupSubmit}>
                     <div className="form-group">
                         <input type="text" name="firstname" id="userFirstName" className="form-control" required placeholder="First Name" onChange={this.onChange}/>
@@ -162,6 +166,9 @@ class Home extends React.Component {
     componentDidUpdate(prevRender) {
         if(this.state.badLogin && this.state.showSignUp){
             this.setState({badLogin: false});
+        }
+        else if(this.state.badSignup && this.state.showLogin){
+            this.setState({badSignup: false})
         }
     }
     
