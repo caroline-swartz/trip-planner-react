@@ -38,6 +38,7 @@ class Home extends React.Component {
         this.setState({ [event.target.name]: event.target.value });
     }
 
+    //redirect to user's dashboard
     goToUserDashboard(user) {
         this.props.history.push('/dashboard/${user.id}');
     }
@@ -56,6 +57,7 @@ class Home extends React.Component {
     //handles submission event from login form
     onLoginSubmit(event) {
         event.preventDefault();
+        this.setState({badLogin: false});
         const { email, firstname, lastname, password, password_confirmation} = this.state;
     
         let user = {
@@ -85,6 +87,7 @@ class Home extends React.Component {
     //handles submission event from signup form
     onSignupSubmit(event) {
         event.preventDefault();
+        this.setState({badSignup: false});
         const { email, firstname, lastname, password, password_confirmation} = this.state;
 
         let user = {
@@ -94,6 +97,14 @@ class Home extends React.Component {
             password: password,
             password_confirmation: password_confirmation
         };
+
+        if(user.password != user.password_confirmation){
+            this.setState({
+                errors: "Passwords do not match.",
+                badSignup: true
+            });
+            return;
+        }
 
         //sends a post request to the 'users/create' route which calls the
         //users controller's create function
@@ -105,8 +116,9 @@ class Home extends React.Component {
                 this.props.handleLogin(response.data);
                 this.props.history.push('/users');
             } else {
+                console.log(response);
                 this.setState({
-                    errors: "An account with this email already exists.",
+                    errors: response.data.errors,
                     badSignup: true
                 });
             }
@@ -123,7 +135,7 @@ class Home extends React.Component {
                 {this.state.badLogin ? <p className="text-danger">{this.state.errors}</p> : null }
                 <form className="home-form" onSubmit={this.onLoginSubmit}>
                     <div className="form-group">
-                        <input type="email" name="email" id="userEmail" className="form-control" required placeholder="Email" onChange={this.onChange}/>
+                        <input type="text" name="email" id="userEmail" className="form-control" required placeholder="Email" onChange={this.onChange}/>
                     </div>
                     <div className="form-group">
                         <input type="password" name="password" id="userPassword" className="form-control" required placeholder="Password" onChange={this.onChange}/>
@@ -149,7 +161,7 @@ class Home extends React.Component {
                         <input type="text" name="lastname" id="userLastName" className="form-control" required placeholder="Last Name" onChange={this.onChange}/>
                     </div>
                     <div className="form-group">
-                        <input type="email" name="email" id="userEmail" className="form-control" required placeholder="Email" onChange={this.onChange}/>
+                        <input type="text" name="email" id="userEmail" className="form-control" required placeholder="Email" onChange={this.onChange}/>
                     </div>
                     <div className="form-group">
                         <input type="password" name="password" id="userPassword" className="form-control" required placeholder="Password" onChange={this.onChange}/>
@@ -163,12 +175,13 @@ class Home extends React.Component {
         )
     }
 
+
     componentDidUpdate(prevRender) {
         if(this.state.badLogin && this.state.showSignUp){
             this.setState({badLogin: false});
         }
         else if(this.state.badSignup && this.state.showLogin){
-            this.setState({badSignup: false})
+            this.setState({badSignup: false});
         }
     }
     
