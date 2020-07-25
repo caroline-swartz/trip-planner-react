@@ -40,7 +40,7 @@ class Home extends React.Component {
 
     //redirect to user's dashboard
     goToUserDashboard(user) {
-        this.props.history.push('/dashboard/${user.id}');
+        this.props.history.push(`/dashboard/${user.id}`);
     }
 
     //sends a delete request and calls our App.jsx's handleLogout function for the session 
@@ -73,7 +73,7 @@ class Home extends React.Component {
             if(response.data.logged_in) {
                 this.setState({badLogin: false})
                 this.props.handleLogin(response.data);
-                this.goToUserDashboard(user);
+                this.goToUserDashboard(response.data.user);
             } else {
                 this.setState({
                     errors: response.data.errors,
