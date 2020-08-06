@@ -40,7 +40,7 @@ class Home extends React.Component {
 
     //redirect to user's dashboard
     goToUserDashboard(user) {
-        this.props.history.push(`/dashboard/${user.id}`);
+        this.props.history.push('/dashboard');
     }
 
     //sends a delete request and calls our App.jsx's handleLogout function for the session 

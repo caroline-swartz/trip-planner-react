@@ -71,7 +71,7 @@ class App extends React.Component {
                         />
                         <Route path="/users" exact component={Users} />
                         <Route 
-                            exact path='/dashboard/:id'
+                            exact path='/dashboard'
                             render={props => (
                                 <Dashboard {...props} currentUser={this.state.user}/>
                             )} 
