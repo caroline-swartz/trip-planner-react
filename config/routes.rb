@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   get 'trips/index'
   get 'trips/show'
-  get 'trips/create'
+  post 'trips/create'
   get 'trips/edit'
   get 'trips/destroy'
   post '/login', to: 'sessions#create'
