@@ -114,7 +114,7 @@ class Home extends React.Component {
             if(response.data.status === 'created') {
                 this.setState({badSignup: false})
                 this.props.handleLogin(response.data);
-                this.props.history.push('/users');
+                this.goToUserDashboard(response.data.user);
             } else {
                 console.log(response);
                 this.setState({
