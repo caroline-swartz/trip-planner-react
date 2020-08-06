@@ -11,7 +11,8 @@ class Dashboard extends React.Component {
             end: "",
             badTrip: false,
             showCreateTripForm: false,
-            errors: ""
+            errors: "",
+            trips: []
         };
 
         this.onChange = this.onChange.bind(this);
@@ -81,12 +82,32 @@ class Dashboard extends React.Component {
         );
     }
 
+    //get all trips for user and update state if trip was added or deleted
+    componentDidUpdate() {
+        const url = "trips/index";
+        fetch(url)
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error("Couldn't get user's trips");
+            })
+            .then(response => {
+                if (this.state.trips.length != response.length){
+                    this.setState({trips: response});
+                }
+            })
+    }
+
     render() {
         return (
             <div>
                 <p>{this.props.currentUser.firstname}'s Dashboard</p>
                 <button className="btn btn-lg custom-button4" onClick={() => this.setState({showCreateTripForm: true})}>New Trip</button>
                 {this.state.showCreateTripForm ? this.showCreateNewTripForm() : null}
+                {this.state.trips.map((trip, index) => (
+                    <h3 key={trip.id}>{trip.name}</h3>
+                ))}
             </div>
         );
     }
