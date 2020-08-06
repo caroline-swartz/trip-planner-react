@@ -21,8 +21,8 @@ class Home extends React.Component {
     
         //binds these functions to be able to use the correct "this" within functions
         this.onChange = this.onChange.bind(this);
-        this.onSignupSubmit = this.onSignupSubmit.bind(this);
-        this.onLoginSubmit = this.onLoginSubmit.bind(this);
+        this.handleSignupSubmit = this.handleSignupSubmit.bind(this);
+        this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
         this.stripHtmlEntities = this.stripHtmlEntities.bind(this);
         this.handleLogoutClick = this.handleLogoutClick.bind(this);
         this.goToUserDashboard = this.goToUserDashboard.bind(this);
@@ -40,7 +40,7 @@ class Home extends React.Component {
 
     //redirect to user's dashboard
     goToUserDashboard(user) {
-        this.props.history.push('/dashboard/${user.id}');
+        this.props.history.push('/dashboard');
     }
 
     //sends a delete request and calls our App.jsx's handleLogout function for the session 
@@ -55,7 +55,7 @@ class Home extends React.Component {
     }
 
     //handles submission event from login form
-    onLoginSubmit(event) {
+    handleLoginSubmit(event) {
         event.preventDefault();
         this.setState({badLogin: false});
         const { email, firstname, lastname, password, password_confirmation} = this.state;
@@ -73,7 +73,7 @@ class Home extends React.Component {
             if(response.data.logged_in) {
                 this.setState({badLogin: false})
                 this.props.handleLogin(response.data);
-                this.goToUserDashboard(user);
+                this.goToUserDashboard(response.data.user);
             } else {
                 this.setState({
                     errors: response.data.errors,
@@ -85,7 +85,7 @@ class Home extends React.Component {
     }
     
     //handles submission event from signup form
-    onSignupSubmit(event) {
+    handleSignupSubmit(event) {
         event.preventDefault();
         this.setState({badSignup: false});
         const { email, firstname, lastname, password, password_confirmation} = this.state;
@@ -114,7 +114,7 @@ class Home extends React.Component {
             if(response.data.status === 'created') {
                 this.setState({badSignup: false})
                 this.props.handleLogin(response.data);
-                this.props.history.push('/users');
+                this.goToUserDashboard(response.data.user);
             } else {
                 console.log(response);
                 this.setState({
@@ -133,7 +133,7 @@ class Home extends React.Component {
             <div className="home-form-div">
                 <hr className="my-4"/>
                 {this.state.badLogin ? <p className="text-danger">{this.state.errors}</p> : null }
-                <form className="home-form" onSubmit={this.onLoginSubmit}>
+                <form className="home-form" onSubmit={this.handleLoginSubmit}>
                     <div className="form-group">
                         <input type="text" name="email" id="userEmail" className="form-control" required placeholder="Email" onChange={this.onChange}/>
                     </div>
@@ -153,7 +153,7 @@ class Home extends React.Component {
             <div className="home-form-div">
                 <hr className="my-4"/>
                 {this.state.badSignup ? <p className="text-danger">{this.state.errors}</p> : null }
-                <form className="home-form" onSubmit={this.onSignupSubmit}>
+                <form className="home-form" onSubmit={this.handleSignupSubmit}>
                     <div className="form-group">
                         <input type="text" name="firstname" id="userFirstName" className="form-control" required placeholder="First Name" onChange={this.onChange}/>
                     </div>

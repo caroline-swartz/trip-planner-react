@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   get 'trips/index'
   get 'trips/show'
-  get 'trips/create'
+  post 'trips/create'
   get 'trips/edit'
   get 'trips/destroy'
   post '/login', to: 'sessions#create'
@@ -9,7 +9,6 @@ Rails.application.routes.draw do
   get '/logged_in', to: 'sessions#is_logged_in?'
   get 'users/index'
   post '/users/create'
-  get '/dashboard/:id', to: 'users#show'
   root 'homepage#index'
   get '/*path' => 'homepage#index'
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html

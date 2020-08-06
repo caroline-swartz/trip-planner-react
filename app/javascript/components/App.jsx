@@ -3,6 +3,7 @@ import axios from 'axios';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Home from "../components/Home"
 import Users from "../components/Users";
+import Dashboard from "../components/Dashboard";
 
 class App extends React.Component {
     constructor(props) {
@@ -29,7 +30,7 @@ class App extends React.Component {
         axios.get('http://localhost:3001/logged_in', {withCredentials: true})
         .then(response => {
             if (response.data.logged_in) {
-                this.handleLogin(response);
+                this.handleLogin(response.data);
             } else {
                 this.handleLogout();
             }
@@ -69,6 +70,12 @@ class App extends React.Component {
                             )}
                         />
                         <Route path="/users" exact component={Users} />
+                        <Route 
+                            exact path='/dashboard'
+                            render={props => (
+                                <Dashboard {...props} currentUser={this.state.user}/>
+                            )} 
+                        />
                     </Switch>
                 </Router>
             </div>

@@ -47,6 +47,11 @@
     margin-left: 25%;
     margin-right: 25%;
   }
+  .custom-button4.btn {
+    background-color: #293241;
+    color: #FFF;
+    border: none;
+  }
   .custom-button.btn:hover {
     color: #FFF !important;
     border: none;
