@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
   get 'trips/index'
-  get 'trips/show'
   post 'trips/create'
   get 'trips/edit'
   get 'trips/destroy'
