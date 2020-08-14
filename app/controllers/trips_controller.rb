@@ -5,6 +5,12 @@ class TripsController < ApplicationController
   end
 
   def show
+    @trip = Trip.find(params[:id])
+    if @trip
+      render json: @trip
+    else
+      render json: @trip.errors
+    end
   end
 
   #creates a new trip for the current user who is logged in
