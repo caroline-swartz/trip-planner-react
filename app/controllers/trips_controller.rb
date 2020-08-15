@@ -1,11 +1,13 @@
 class TripsController < ApplicationController
+
+  before_action :set_trip, only: [:show, :destroy]
+
   def index
     trips = current_user.trips
     render json: trips
   end
 
   def show
-    @trip = Trip.find(params[:id])
     if @trip
       render json: @trip
     else
@@ -15,16 +17,16 @@ class TripsController < ApplicationController
 
   #creates a new trip for the current user who is logged in
   def create
-    @trip = current_user.trips.new(trip_params)
-    if @trip.save
+    trip = current_user.trips.new(trip_params)
+    if trip.save
       render json: {
         status: :created,
-        trip: @trip
+        trip: trip
       }
     else
       render json: {
         status: 500,
-        errors: @trip.errors.full_messages
+        errors: trip.errors.full_messages
       }
     end
   end
@@ -33,9 +35,17 @@ class TripsController < ApplicationController
   end
 
   def destroy
+    @trip.destroy
+    render json: {
+      status: :deleted
+    }
   end
 
   private 
+
+  def set_trip
+    @trip = Trip.find(params[:id])
+  end
 
   def trip_params
     params.require(:trip).permit(:name, :budget, :start, :end)

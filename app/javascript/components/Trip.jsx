@@ -1,4 +1,5 @@
 import React from "react";
+import axios from 'axios';
 
 class Trip extends React.Component {
     constructor(props) {
@@ -7,6 +8,14 @@ class Trip extends React.Component {
             trip: ""
         }
 
+        this.handleDelete = this.handleDelete.bind(this);
+    }
+
+    handleDelete(event) {
+        axios.post('http://localhost:3001/trips/destroy', this.props.currentTrip, {withCredentials: true})
+        .then(response =>{
+            this.props.showTrips();
+            });
     }
 
     render() {
@@ -15,6 +24,7 @@ class Trip extends React.Component {
                 <h1>{this.props.currentTrip.name}</h1>
                 <h2>{this.props.currentTrip.start.substring(5,7)}/{this.props.currentTrip.start.substring(8)}/{this.props.currentTrip.start.substring(0,4)} - {this.props.currentTrip.end.substring(5,7)}/{this.props.currentTrip.end.substring(8)}/{this.props.currentTrip.end.substring(0,4)}</h2>
                 <h2>Remaining budget: &#36;{this.props.currentTrip.budget}</h2>
+                <button className="btn btn-lg custom-button2" onClick={this.handleDelete}>Delete</button>
             </div>
         );
     }
