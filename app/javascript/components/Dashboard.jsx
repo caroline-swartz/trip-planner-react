@@ -1,6 +1,6 @@
 import React from "react";
 import axios from 'axios';
-
+import Trip from "../components/Trip"
 class Dashboard extends React.Component {
     constructor(props) {
         super(props);
@@ -10,13 +10,20 @@ class Dashboard extends React.Component {
             start: "",
             end: "",
             badTrip: false,
-            showCreateTripForm: false,
+            showWhich: "allTrips",
+            backButton: false,
             errors: "",
-            trips: []
+            trips: [],
+            trip: {}
         };
 
         this.onChange = this.onChange.bind(this);
         this.handleCreateNewTrip = this.handleCreateNewTrip.bind(this);
+        this.setAllTrips = this.setAllTrips.bind(this);
+    }
+
+    setAllTrips() {
+        this.setState({showWhich: "allTrips", backButton: false});
     }
 
     //updates state variables when user types in a field
@@ -44,8 +51,9 @@ class Dashboard extends React.Component {
             if(response.data.status === 'created') {
                 this.setState({
                     badTrip: false,
-                    showCreateTripForm: false
-                })
+                    showWhich: "allTrips",
+                    backButton: false
+                });
                 this.props.history.push('/dashboard');
             } else { //this means the trip was unsuccessful, display errors
                 this.setState({
@@ -57,11 +65,10 @@ class Dashboard extends React.Component {
         .catch(error => console.log('api errors:', error));
     }
 
-    //when the "new trip button is clicked, this form will appear"
+    //when the "new trip" button is clicked, the trips will hide and this form will appear
     showCreateNewTripForm = () => {
         return(
             <div className="home-form-div">
-                <hr className="my-4"/>
                 {this.state.badTrip ? <p className="text-danger">{this.state.errors}</p> : null }
                 <form className="home-form" onSubmit={this.handleCreateNewTrip}>
                     <div className="form-group">
@@ -80,6 +87,48 @@ class Dashboard extends React.Component {
                 </form>
             </div>
         );
+    }
+
+    //show the list of trips
+    showAllTrips = () => {
+        return(
+            <div className="row">
+                {this.state.trips.map((trip, index) => (   
+                    <div key={trip.id} className="col-md-6 col-lg-4">
+                            <div className="card text-center rounded card mb-4" onClick={() => this.setState({showWhich: "singleTrip", backButton: true, trip: trip})}>
+                                <div className="card-body">
+                                <h5 className="card-title">{trip.name}</h5>
+                                </div>
+                            </div>
+                    </div>
+                ))}
+            </div>
+        );
+    }
+
+    //show information for a single trip the user clicks on
+    showSingleTrip = () => {
+        return(
+            <div>
+                <Trip currentTrip={this.state.trip} showTrips={this.setAllTrips}/>
+            </div>
+        );
+    }
+
+    componentDidMount() {
+        const url = "trips/index";
+        fetch(url)
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error("Couldn't get user's trips");
+            })
+            .then(response => {
+                if (this.state.trips.length != response.length){
+                    this.setState({trips: response});
+                }
+            })
     }
 
     //get all trips for user and update state if trip was added or deleted
@@ -102,12 +151,16 @@ class Dashboard extends React.Component {
     render() {
         return (
             <div>
-                <p>{this.props.currentUser.firstname}'s Dashboard</p>
-                <button className="btn btn-lg custom-button4" onClick={() => this.setState({showCreateTripForm: true})}>New Trip</button>
-                {this.state.showCreateTripForm ? this.showCreateNewTripForm() : null}
-                {this.state.trips.map((trip, index) => (
-                    <h3 key={trip.id}>{trip.name}</h3>
-                ))}
+                <div className="d-flex flex-row align-items-center clearfix">
+                    <h1 className="heading">{this.props.currentUser.firstname}'s Trips</h1>
+                    {this.state.backButton ? 
+                        <button className="btn btn-lg custom-button4" onClick={() => this.setState({showWhich: "allTrips", backButton: false})}>All Trips</button> :
+                        <button className="btn btn-lg custom-button4" onClick={() => this.setState({showWhich: "newTripForm", backButton: true})}>New Trip</button>}
+                </div>
+                <hr id="topLine" className="my-4"/>
+                <div className="container">
+                    {(this.state.showWhich === "newTripForm") ? this.showCreateNewTripForm() : (this.state.showWhich === "allTrips") ? this.showAllTrips(): this.showSingleTrip()}
+                </div>
             </div>
         );
     }

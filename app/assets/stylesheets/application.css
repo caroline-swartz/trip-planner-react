@@ -33,11 +33,19 @@
     width: 20%;
     margin-right: 5%;
   }
+  .custom-button1.btn:hover {
+    color: rgb(184, 181, 181) !important;
+    border: none;
+  }
   .custom-button2.btn {
     background-color: #293241;
     color: #FFF;
     border: none;
     width: 20%;
+  }
+  .custom-button2.btn:hover {
+    color: rgb(184, 181, 181) !important;
+    border: none;
   }
   .custom-button3.btn {
     background-color: #293241;
@@ -47,13 +55,21 @@
     margin-left: 25%;
     margin-right: 25%;
   }
+  .custom-button3.btn:hover {
+    color: rgb(184, 181, 181) !important;
+    border: none;
+  }
   .custom-button4.btn {
     background-color: #293241;
     color: #FFF;
     border: none;
+    height: 80%;
+    width: 9%;
+    margin-left: 26.5%;
+    margin-top: 1.5%;
   }
-  .custom-button.btn:hover {
-    color: #FFF !important;
+  .custom-button4.btn:hover {
+    color: rgb(184, 181, 181) !important;
     border: none;
   }
   .overlay {
@@ -81,4 +97,19 @@
   .home-form {
     width: 30%;
     margin:0 auto;
+  }
+
+  .heading {
+    width: 26%;
+    margin-left: 37%;
+    text-align: center;
+    margin-top: .85%;
+    margin-bottom: -.85%;
+  }
+  .card {
+    border-color: #293241;
+    cursor: pointer;
+  }
+  .card-title {
+    font-size: 150%;
   }
