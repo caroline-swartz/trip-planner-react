@@ -19,6 +19,11 @@ class Dashboard extends React.Component {
 
         this.onChange = this.onChange.bind(this);
         this.handleCreateNewTrip = this.handleCreateNewTrip.bind(this);
+        this.setAllTrips = this.setAllTrips.bind(this);
+    }
+
+    setAllTrips() {
+        this.setState({showWhich: "allTrips", backButton: false});
     }
 
     //updates state variables when user types in a field
@@ -46,8 +51,9 @@ class Dashboard extends React.Component {
             if(response.data.status === 'created') {
                 this.setState({
                     badTrip: false,
-                    showCreateTripForm: false
-                })
+                    showWhich: "allTrips",
+                    backButton: false
+                });
                 this.props.history.push('/dashboard');
             } else { //this means the trip was unsuccessful, display errors
                 this.setState({
@@ -104,7 +110,7 @@ class Dashboard extends React.Component {
     showSingleTrip = () => {
         return(
             <div>
-                <Trip currentTrip={this.state.trip}/>
+                <Trip currentTrip={this.state.trip} showTrips={this.setAllTrips}/>
             </div>
         );
     }
