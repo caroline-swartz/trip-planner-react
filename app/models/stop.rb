@@ -1,5 +1,5 @@
 class Stop < ApplicationRecord
-    belongs_to: trip
+    belongs_to :trip
 
     validates :location, presence: true
     validates :budget, presence:true

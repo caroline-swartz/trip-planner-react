@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+  get 'stops/index'
+  get 'stops/show'
+  post 'stops/create'
+  get 'stops/edit'
+  get 'stops/destroy'
   get 'trips/index'
   post 'trips/create'
   get 'trips/edit'
