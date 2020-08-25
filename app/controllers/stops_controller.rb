@@ -1,7 +1,7 @@
 class StopsController < ApplicationController
   def index
     trip = Trip.find(params[:id])
-    stops = trip.stops
+    stops = trip.stops.sort_by &:start
     render json: stops
   end
 

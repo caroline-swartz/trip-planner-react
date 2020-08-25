@@ -102,22 +102,22 @@ class Trip extends React.Component {
                     <div key={stop.id} className="col-md-6 col-lg-4">
                             <div className="card text-center rounded card-container mb-4">
                                 <div className="card-body">
-                                <h5>{stop.location}</h5>
+                                    <h4>{stop.location}</h4>
+                                    <h6>{stop.start.substring(5,7)}/{stop.start.substring(8)}/{stop.start.substring(0,4)} - {stop.end.substring(5,7)}/{stop.end.substring(8)}/{stop.end.substring(0,4)}</h6>
                                 </div>
                             </div>
                     </div>
                 ))}
                 <div className="col-md-6 col-lg-4">
-                    <div className="card text-center rounded card-add-stop mb-4">
-                        <div className="card-body">
-                            <h5 className="text-link" onClick={() => this.setState({showAddNewStop: true})}>Add a Stop</h5>
-                        </div>
+                    <div className="card text-center rounded card-add-stop mb-4 align-items-center justify-content-center">
+                        <h4 className="text-link" onClick={() => this.setState({showAddNewStop: true})}>Add a Stop</h4>
                     </div>
                 </div>
             </div>
         );
     }
 
+    //show this if there are no stops added yet
     noStops = () => {
         return (
             <div className="d-flex align-items-center justify-content-center">
