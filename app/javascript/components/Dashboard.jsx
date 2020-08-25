@@ -95,7 +95,7 @@ class Dashboard extends React.Component {
             <div className="row">
                 {this.state.trips.map((trip, index) => (   
                     <div key={trip.id} className="col-md-6 col-lg-4">
-                            <div className="card text-center rounded card mb-4" onClick={() => this.setState({showWhich: "singleTrip", backButton: true, trip: trip})}>
+                            <div className="card text-center rounded card1 mb-4" onClick={() => this.setState({showWhich: "singleTrip", backButton: true, trip: trip})}>
                                 <div className="card-body">
                                 <h5 className="card-title">{trip.name}</h5>
                                 </div>

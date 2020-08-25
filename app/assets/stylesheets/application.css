@@ -72,6 +72,18 @@
     color: rgb(184, 181, 181) !important;
     border: none;
   }
+  .custom-button5.btn {
+    background-color: #293241;
+    color: #FFF;
+    border: none;
+    width: 12%;
+    margin-bottom: 1%;
+  }
+  .custom-button5.btn:hover {
+    color: rgb(184, 181, 181) !important;
+    border: none;
+  }
+
   .overlay {
     height: 100%;
     width: 100%;
@@ -106,10 +118,30 @@
     margin-top: .85%;
     margin-bottom: -.85%;
   }
-  .card {
+  .card1 {
     border-color: #293241;
     cursor: pointer;
   }
   .card-title {
     font-size: 150%;
+  }
+  .trip-title {
+    margin-top: -2%;
+    font-size: 200%;
+  }
+  .text-link:hover {
+    cursor:pointer;
+     text-decoration:underline;
+  }
+  .card-container {
+    height: 75%;
+    border-color: #293241;
+  }
+  .card-add-stop {
+    height: 75%;
+    border-color: #293241;
+    cursor: pointer;
+  }
+  .container-fluid {
+    margin-top: 1%;
   }
