@@ -97,7 +97,8 @@ class Dashboard extends React.Component {
                     <div key={trip.id} className="col-md-6 col-lg-4">
                             <div className="card text-center rounded card1 mb-4" onClick={() => this.setState({showWhich: "singleTrip", backButton: true, trip: trip})}>
                                 <div className="card-body">
-                                <h5 className="card-title">{trip.name}</h5>
+                                    <h2 className="card-title">{trip.name}</h2>
+                                    <h6>{trip.start.substring(5,7)}/{trip.start.substring(8)}/{trip.start.substring(0,4)} - {trip.end.substring(5,7)}/{trip.end.substring(8)}/{trip.end.substring(0,4)}</h6>
                                 </div>
                             </div>
                     </div>
